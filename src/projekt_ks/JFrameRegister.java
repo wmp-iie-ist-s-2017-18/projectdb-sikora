@@ -8,6 +8,7 @@ package projekt_ks;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 
@@ -22,6 +23,7 @@ public class JFrameRegister extends javax.swing.JFrame {
      */
     public JFrameRegister() {
         initComponents();
+
     }
 
     /**
@@ -143,74 +145,63 @@ public class JFrameRegister extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
+
         Statement stmt;
-        Connection conn;
+        Connection conn = null;
         String login = jTextField1.getText();
         String email = jTextField2.getText();
         String imie = jTextField3.getText();
         String nazwisko = jTextField4.getText();
         String haslo = jTextField5.getText();
         String pozycja = jTextField6.getText();
-        
-       /*  String Sterownik = "com.mysql.jdbc.Driver";
-         
+
         try {
-            Class.forName(Sterownik);
-            String url = "jdbc:mysql://localhost/database";
-            String user = "root";
-            String pass = "";
-            //Connection conn = DriverManager.getConnection(URL, USER, PASS);
-            c = DriverManager.getConnection(url, user, pass);            
-            c.setAutoCommit(false);
-          */
-          try {
-              
-             Class.forName("com.mariadb.jdbc.Driver");
-            String url = "jdbc:mariadb://localhost/database";
-     Connection connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/database?user=root&password=");
 
-            String user = "root";
-            String pass = "";
-            //Connection conn = DriverManager.getConnection(URL, USER, PASS);
-            connection = DriverManager.getConnection(url, user, pass);            
+            //Creating Connection Object
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/database", "root", "");
             connection.setAutoCommit(false);
-                stmt = connection.createStatement();
-                String sql = "INSERT INTO employee(first_Name, last_Name, login, email, password, position) VALUES ('"+imie+"', '"+nazwisko+"', '"+login+"', "+email+", '"+haslo+"',"+pozycja+" );";
-               
-             stmt.executeUpdate(sql);
-                connection.commit();
+            System.out.println("Opened database successfully");
 
-                stmt.close();
-                connection.close();
-                JOptionPane.showMessageDialog(null, "Pracownik dodany!");
-               } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "Błąd Dodawania!");
-                System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-                e1.printStackTrace();
-            }
+            stmt = connection.createStatement();
+            String sql = "INSERT INTO employee(first_Name, last_Name, login, email, password, position) VALUES (?,?,?,?,?,?);";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setString(1, imie);
+            pst.setString(2, nazwisko);
+            pst.setString(3, login);
+            pst.setString(4, email);
+            pst.setString(5, haslo);
+            pst.setString(6, pozycja);
+            pst.executeUpdate();
 
-      
-        
-    /*    String login = jTextField1.getText();        
-         String email = jTextField2.getText();
-          String imie = jTextField3.getText();
-         String nazwisko = jTextField4.getText();
-         String haslo = jTextField5.getText();
-          String pozycja = jTextField6.getText();
-          
+            // stmt.executeUpdate(sql);
+            connection.commit();
+
+            stmt.close();
+            connection.close();
+            JOptionPane.showMessageDialog(null, "Pracownik dodany!");
+        } catch (Exception e1) {
+            JOptionPane.showMessageDialog(null, "Błąd Dodawania!");
+            System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+            e1.printStackTrace();
+        }
+
+        /*
                       try {
                 //Creating Connection Object
                 Connection connection=DriverManager.getConnection("jdbc:mysql://localhost:3306/database","root","");
                 //Preapared Statement
-                PreparedStatement Pstatement=connection.prepareStatement("insert into employee values(?,?,?,?,?,?)");
+               // PreparedStatement Pstatement=connection.prepareStatement("insert into employee values(?,?,?,?,?,?)");
                 //Specifying the values of it's parameter
-                Pstatement.setString(1,login);
-                Pstatement.setString(2,email);
-                Pstatement.setString(3,imie);
-                Pstatement.setString(4,nazwisko);
-                Pstatement.setString(5,haslo);
-                Pstatement.setString(6,pozycja);
-               
+           PreparedStatement pst = connection.prepareStatement("insert into employee(first_Name, last_Name, login, email, password, position) values(?,?,?,?,?,?)");
+                pst.setString(1, imie);
+                 pst.setString(2, nazwisko);
+                  pst.setString(3, login);
+                   pst.setString(4, email);
+                    pst.setString(5, haslo);
+                     pst.setString(6, pozycja);
+                     pst.executeUpdate();
+                
                 
  
             } catch (Exception e1) {
@@ -218,19 +209,15 @@ public class JFrameRegister extends javax.swing.JFrame {
             }
 
     }
-*/
+         */
 
-
-          
     }//GEN-LAST:event_jButton1MouseClicked
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
-        
-        
+
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -261,6 +248,39 @@ public class JFrameRegister extends javax.swing.JFrame {
             }
         });
     }
+
+    private Connection connect() {
+        // SQLite connection string
+        String url = "jdbc:mysql://localhost/database";
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(url, "root", "");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return conn;
+    }
+
+    //team id name lider id
+    /*
+    public void insert(String first_Name, String last_Name, String login, String email, String password, String position) {
+        String sql = "INSERT INTO employee(first_Name, last_Name, login, email, password, position) VALUES(?,?,?,?,?,?)";
+
+        try (Connection conn = this.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, first_Name);
+            pstmt.setString(2, last_Name);
+            pstmt.setString(3, login);
+            pstmt.setString(4, email);
+            pstmt.setString(5, password);
+            pstmt.setString(6, position);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

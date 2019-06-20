@@ -5,10 +5,13 @@
  */
 package projekt_ks;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,19 +25,27 @@ import javax.swing.table.DefaultTableModel;
 public class JFrameApp extends javax.swing.JFrame {
      ArrayList<Employee> baza_prac = new ArrayList<>();
      ArrayList<Team> array_team = new ArrayList<>();
+     ArrayList<Team_Employee> array_team_employee = new ArrayList<>();
      ArrayList<Project> array_project = new ArrayList<>();
    // List<String> listaPESELI = new ArrayList<String>();
     Employee dodaj;
     Team add_team;
     Project add_project;
+    Team_Employee add_team_employee;
     Connection c = null;
     Statement stmt = null;
     String sorting = null;
 
+            
     /**
      * Creates new form JFrameApp
      */
     public JFrameApp() {
+        initComponents();
+    }
+    
+       public JFrameApp(int employee_ID) {
+           
         initComponents();
     }
 
@@ -65,24 +76,46 @@ public class JFrameApp extends javax.swing.JFrame {
         jTable3 = new javax.swing.JTable();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTable4 = new javax.swing.JTable();
+        jButton6 = new javax.swing.JButton();
+        jTextField6 = new javax.swing.JTextField();
+        jButton8 = new javax.swing.JButton();
+        jButton9 = new javax.swing.JButton();
+        jTextField7 = new javax.swing.JTextField();
+        jTextField8 = new javax.swing.JTextField();
+        jTextField9 = new javax.swing.JTextField();
+        jButton10 = new javax.swing.JButton();
+        jButton11 = new javax.swing.JButton();
+        jButton12 = new javax.swing.JButton();
+        jTextField10 = new javax.swing.JTextField();
+        jTextField11 = new javax.swing.JTextField();
+        jTextField12 = new javax.swing.JTextField();
+        jTextField13 = new javax.swing.JTextField();
+        jTextField14 = new javax.swing.JTextField();
+        jTextField15 = new javax.swing.JTextField();
+        jTextField16 = new javax.swing.JTextField();
+        jButton13 = new javax.swing.JButton();
+        jButton14 = new javax.swing.JButton();
+        jButton15 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "login", "email", "imie", "nazwisko", "position"
+                "ID", "login", "email", "imie", "nazwisko", "position"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -114,8 +147,18 @@ public class JFrameApp extends javax.swing.JFrame {
         jTextField5.setText("position");
 
         jButton2.setText("Popraw");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
 
         jButton3.setText("Usuń");
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton3MouseClicked(evt);
+            }
+        });
 
         jLabel2.setText("Pracownicy");
 
@@ -136,27 +179,38 @@ public class JFrameApp extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
+        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable2MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable2);
 
         jLabel3.setText("Zespoły");
 
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Id", "Nazwa", "Rozpoczecie", "Zakończenie", "team_id", "Opis"
+                "Id", "Nazwa", "Stan", "Rozpoczecie", "Zakończenie", "team_id", "Opis"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+        });
+        jTable3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable3MouseClicked(evt);
             }
         });
         jScrollPane3.setViewportView(jTable3);
@@ -168,17 +222,10 @@ public class JFrameApp extends javax.swing.JFrame {
             }
         });
 
-        jButton5.setText("Refresh project");
+        jButton5.setText("Refresh projects");
         jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton5MouseClicked(evt);
-            }
-        });
-
-        jButton6.setText("Funkcja");
-        jButton6.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton6MouseClicked(evt);
             }
         });
 
@@ -188,6 +235,117 @@ public class JFrameApp extends javax.swing.JFrame {
                 jButton7MouseClicked(evt);
             }
         });
+
+        jTable4.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "team_ID", "Imie", "Nazwisko", "Nazwa", "leader_ID"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane4.setViewportView(jTable4);
+
+        jButton6.setText("Refresh");
+        jButton6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton6MouseClicked(evt);
+            }
+        });
+
+        jTextField6.setEditable(false);
+        jTextField6.setText("id");
+
+        jButton8.setText("Add to team");
+        jButton8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton8MouseClicked(evt);
+            }
+        });
+
+        jButton9.setText("Exclude");
+        jButton9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton9MouseClicked(evt);
+            }
+        });
+
+        jTextField7.setEditable(false);
+        jTextField7.setText("jTextField7");
+
+        jTextField8.setText("jTextField8");
+
+        jTextField9.setText("jTextField9");
+
+        jButton10.setText("Edytuj team");
+        jButton10.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton10MouseClicked(evt);
+            }
+        });
+
+        jButton11.setText("Stwórz nowy");
+        jButton11.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton11MouseClicked(evt);
+            }
+        });
+
+        jButton12.setText("Usuń Team");
+        jButton12.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton12MouseClicked(evt);
+            }
+        });
+
+        jTextField10.setEditable(false);
+        jTextField10.setText("jTextField10");
+
+        jTextField11.setText("jTextField11");
+
+        jTextField12.setText("jTextField12");
+
+        jTextField13.setText("jTextField13");
+
+        jTextField14.setText("jTextField14");
+
+        jTextField15.setText("jTextField15");
+
+        jTextField16.setText("jTextField16");
+
+        jButton13.setText("Nowy projekt");
+        jButton13.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton13MouseClicked(evt);
+            }
+        });
+
+        jButton14.setText("Popraw dane");
+        jButton14.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton14MouseClicked(evt);
+            }
+        });
+
+        jButton15.setText("Usuń projekt");
+        jButton15.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton15MouseClicked(evt);
+            }
+        });
+
+        jLabel1.setText("Aby dodać / usunąć pracownika z grupy wybierz zaznacz rekordy z tabel");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -199,19 +357,66 @@ public class JFrameApp extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addGap(227, 227, 227))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(8, 8, 8)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton15)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton14)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5)
-                    .addComponent(jButton6)
-                    .addComponent(jButton7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jButton5))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton7)
+                                    .addComponent(jButton13))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton4)
+                            .addComponent(jButton10)
+                            .addComponent(jButton11)
+                            .addComponent(jButton12))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(87, 87, 87)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton6)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton8)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton9))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -230,7 +435,11 @@ public class JFrameApp extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton3))))
+                            .addComponent(jButton3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 442, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27))
         );
         layout.setVerticalGroup(
@@ -246,28 +455,66 @@ public class JFrameApp extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(26, 26, 26)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jButton4))
-                .addGap(18, 18, 18)
+                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton2)
+                            .addComponent(jButton3)
+                            .addComponent(jButton1)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton4)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton10)
+                        .addGap(23, 23, 23)
+                        .addComponent(jButton12)))
+                .addGap(138, 138, 138)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton2)
-                        .addComponent(jButton3)
-                        .addComponent(jButton1))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton6)
+                            .addComponent(jButton8)
+                            .addComponent(jButton9))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel1)
+                        .addGap(11, 11, 11))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton5)
-                        .addGap(30, 30, 30)
-                        .addComponent(jButton6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton7)))
-                .addContainerGap(179, Short.MAX_VALUE))
+                        .addGap(21, 21, 21)
+                        .addComponent(jButton7)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton13)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton14)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton15)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
@@ -275,10 +522,10 @@ public class JFrameApp extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
- String Sterownik = "org.mariadb.jdbc.Driver";
+ String Sterownik = "com.mysql.jdbc.Driver";
         try {
             Class.forName(Sterownik);
-            String url = "jdbc:mariadb://localhost/database";
+            String url = "jdbc:mysql://localhost/database";
             String user = "root";
             String pass = "";
             //Connection conn = DriverManager.getConnection(URL, USER, PASS);
@@ -298,7 +545,8 @@ public class JFrameApp extends javax.swing.JFrame {
                 String imie = rs.getString("first_Name");
                 String nazwisko = rs.getString("last_Name");
                 String position = rs.getString("position");
-                String password = rs.getString("password"); 
+                String password = rs.getString("password");
+            
                 dodaj = new Employee(id, login, email, imie, nazwisko, password, position);
                 baza_prac.add(dodaj);
                // listaPESELI.add(dodaj.getPESEL());
@@ -384,7 +632,7 @@ public class JFrameApp extends javax.swing.JFrame {
             ResultSet rs = stmt.executeQuery("SELECT * FROM project ;");
 
             while (rs.next()) {
-                int project_id = rs.getInt("project_id");
+                int project_id = rs.getInt("project_ID");
                 String name = rs.getString("name");
                String state = rs.getString("state");
              //  Date start = rs.getDate(start);
@@ -392,7 +640,8 @@ public class JFrameApp extends javax.swing.JFrame {
               Date finish = rs.getObject("finish", Date.class);
               int team_id = rs.getInt("team_id");
                String description = rs.getString("description");
-                add_project = new Project(team_id, name, state, start, finish, team_id, description );
+                add_project = new Project(project_id, name, state, start, finish, team_id, description);
+               // System.out.println(add_project.getDescription());
                array_project.add(add_project);
               
 
@@ -419,22 +668,573 @@ public class JFrameApp extends javax.swing.JFrame {
 
         int selectedRowIndex = jTable1.getSelectedRow();
         // set the selected row data into jtextfields
-
-        jTextField1.setText(model.getValueAt(selectedRowIndex, 0).toString());
-        jTextField2.setText(model.getValueAt(selectedRowIndex, 1).toString());
-        jTextField3.setText(model.getValueAt(selectedRowIndex, 2).toString());
-        jTextField4.setText(model.getValueAt(selectedRowIndex, 3).toString());
-        jTextField5.setText(model.getValueAt(selectedRowIndex, 4).toString());
+        
+        jTextField6.setText(model.getValueAt(selectedRowIndex, 0).toString());
+        jTextField1.setText(model.getValueAt(selectedRowIndex, 1).toString());
+        jTextField2.setText(model.getValueAt(selectedRowIndex, 2).toString());
+        jTextField3.setText(model.getValueAt(selectedRowIndex, 3).toString());
+        jTextField4.setText(model.getValueAt(selectedRowIndex, 4).toString());
+        jTextField5.setText(model.getValueAt(selectedRowIndex, 5).toString());
+        
 
     }//GEN-LAST:event_jTable1MouseClicked
 
-    private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6MouseClicked
-
     private void jButton7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7MouseClicked
         // TODO add your handling code here:
+            Connection conn = null;
+   CallableStatement stmt = null;
+   try{
+      //STEP 2: Register JDBC driver
+      Class.forName("com.mysql.jdbc.Driver");
+       String url = "jdbc:mysql://localhost/database";
+            String user = "root";
+            String pass = "";
+      //STEP 3: Open a connection
+      System.out.println("Connecting to database...");
+      conn = DriverManager.getConnection(url,user,pass);
+
+      //STEP 4: Execute a query
+      System.out.println("Creating statement...");
+      String sql = "{call updateStates ()}";
+      stmt = conn.prepareCall(sql);
+      /*
+      //Bind IN parameter first, then bind OUT parameter
+      int empID = 102;
+      stmt.setInt(1, empID); // This would set ID as 102
+      // Because second parameter is OUT so register it
+      stmt.registerOutParameter(2, java.sql.Types.VARCHAR);
+      */
+      //Use execute method to run stored procedure.
+      System.out.println("Executing stored procedure..." );
+      stmt.execute();
+/*
+      //Retrieve employee name with getXXX method
+      String empName = stmt.getString(2);
+      System.out.println("Emp Name with ID:" + 
+               empID + " is " + empName);
+      */
+      stmt.close();
+      conn.close();
+   }catch(SQLException se){
+      //Handle errors for JDBC
+      se.printStackTrace();
+   }catch(Exception e){
+      //Handle errors for Class.forName
+      e.printStackTrace();
+   }finally{
+      //finally block used to close resources
+      try{
+         if(stmt!=null)
+            stmt.close();
+      }catch(SQLException se2){
+      }// nothing we can do
+      try{
+         if(conn!=null)
+            conn.close();
+      }catch(SQLException se){
+         se.printStackTrace();
+      }//end finally try
+   }//end try
     }//GEN-LAST:event_jButton7MouseClicked
+
+    private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseClicked
+        // TODO add your handling code here:
+        //select employee.employee_ID, employee.first_Name, employee.last_Name, team.team_ID, team.name, team.leader_ID FROM employee, team, team_employee WHERE employee.employee_ID = team_employee.employee_ID AND team.team_ID = team_employee.team_ID
+        
+          String Sterownik = "com.mysql.jdbc.Driver";
+         
+        try {
+            Class.forName(Sterownik);
+            String url = "jdbc:mysql://localhost/database";
+            String user = "root";
+            String pass = "";
+            //Connection conn = DriverManager.getConnection(URL, USER, PASS);
+            c = DriverManager.getConnection(url, user, pass);            
+            c.setAutoCommit(false);
+
+            clean_table4();
+    
+
+            stmt = c.createStatement();
+// select employee.first_Name, employee.last_Name, team.name from employee, team, team_employee WHERE employee.employee_ID = team_employee.employee_ID and team.team_ID = team_employee.team_ID
+            ResultSet rs = stmt.executeQuery("select employee.first_Name, employee.last_Name, team.name, team.team_ID, employee.employee_ID, team.leader_ID from employee, team, team_employee WHERE employee.employee_ID = team_employee.employee_ID and team.team_ID = team_employee.team_ID ;");
+
+            while (rs.next()) {
+                int team_id = rs.getInt("team_ID");
+                 int employee_id = rs.getInt("employee_ID");
+                  int leader_id = rs.getInt("leader_ID");
+                String team_name = rs.getString("name");
+               String nazwisko = rs.getString("last_Name");
+               String imie = rs.getString("first_Name");
+               // Team_Employee(int employee_ID, String first_Name, String last_Name, int team_id, String name, int leader_id)
+                add_team_employee = new Team_Employee(employee_id,imie, nazwisko,team_id, team_name,leader_id);
+               array_team_employee.add(add_team_employee);
+               // listaPESELI.add(dodaj.getPESEL());
+
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+            wyswietlWiersz4();
+            JOptionPane.showMessageDialog(null, "Baza załadowana pomyślnie!");
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        
+        
+        
+        
+    }//GEN-LAST:event_jButton6MouseClicked
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        // TODO add your handling code here:
+        //update
+//UPDATE `employee` SET `employee_ID`=[value-1],`first_Name`=[value-2],`last_Name`=[value-3],`login`=[value-4],`email`=[value-5],`password`=[value-6],`position`=[value-7] WHERE 
+               
+                String login = jTextField1.getText();
+                String email = jTextField2.getText();
+                String imie = jTextField3.getText();
+                String nazwisko = jTextField4.getText();
+                String position = jTextField5.getText();
+                //int id = Integer.parseInt(jTextField6.getText());
+                String id = jTextField6.getText();
+                
+                
+                  try {
+
+            //Creating Connection Object
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/database", "root", "");
+            connection.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+
+            stmt = connection.createStatement();
+            String sql = "UPDATE `employee` SET `first_Name`=?,`last_Name`=?,`login`=?,`email`=?,`position`=? WHERE employee_ID = ? ";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setString(1, imie);
+            pst.setString(2, nazwisko);
+            pst.setString(3, login);
+            pst.setString(4, email);
+            pst.setString(5, position);
+            pst.setString(6, id);
+            pst.executeUpdate();
+
+            // stmt.executeUpdate(sql);
+            connection.commit();
+
+            stmt.close();
+            connection.close();
+            JOptionPane.showMessageDialog(null, "Dane poprawione");
+        } catch (Exception e1) {
+            JOptionPane.showMessageDialog(null, "Błąd Edycji!");
+            System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+            e1.printStackTrace();
+        }
+
+
+    }//GEN-LAST:event_jButton2MouseClicked
+
+    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
+        // TODO add your handling code here: usuwanie Pracownika
+        String id = jTextField6.getText();
+        
+         try {
+
+            //Creating Connection Object
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/database", "root", "");
+            connection.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+
+            stmt = connection.createStatement();
+            String sql = "DELETE from employee where employee_ID = ? ";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setString(1, id);
+            pst.executeUpdate();
+
+            // stmt.executeUpdate(sql);
+            connection.commit();
+
+            stmt.close();
+            connection.close();
+            JOptionPane.showMessageDialog(null, "Rekord skasowany!");
+        } catch (Exception e1) {
+            JOptionPane.showMessageDialog(null, "Błąd Edycji!");
+            System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+            e1.printStackTrace();
+        }
+        
+        
+        
+    }//GEN-LAST:event_jButton3MouseClicked
+
+    private void jButton10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton10MouseClicked
+        // TODO add your handling code here: insert team
+        
+        String id = jTextField7.getText();
+        String nazwa = jTextField8.getText();
+        String leader = jTextField9.getText();
+        
+                
+                
+                  try {
+
+            //Creating Connection Object
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/database", "root", "");
+            connection.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+
+            stmt = connection.createStatement();
+            String sql = "UPDATE `team` SET `name`=?,`leader_ID`= ? WHERE team_id = ? ";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setString(1, nazwa);
+            pst.setString(2, leader);
+            pst.setString(3, id);
+          
+            pst.executeUpdate();
+
+            // stmt.executeUpdate(sql);
+            connection.commit();
+
+            stmt.close();
+            connection.close();
+            JOptionPane.showMessageDialog(null, "Dane poprawione");
+        } catch (Exception e1) {
+            JOptionPane.showMessageDialog(null, "Błąd Edycji!");
+            System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+            e1.printStackTrace();
+        }
+        
+        
+        
+    }//GEN-LAST:event_jButton10MouseClicked
+
+    private void jButton11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton11MouseClicked
+        // TODO add your handling code here: team insert
+        
+          String nazwa = jTextField8.getText();
+        String leader_id = jTextField9.getText();
+     
+
+        try {
+
+            //Creating Connection Object
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/database", "root", "");
+            connection.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+
+            stmt = connection.createStatement();
+            String sql = "INSERT INTO team(name, leader_ID) VALUES (?,?);";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setString(1, nazwa);
+            pst.setString(2, leader_id);
+
+            pst.executeUpdate();
+
+            // stmt.executeUpdate(sql);
+            connection.commit();
+
+            stmt.close();
+            connection.close();
+            JOptionPane.showMessageDialog(null, "Pracownik dodany!");
+        } catch (Exception e1) {
+            JOptionPane.showMessageDialog(null, "Błąd Dodawania!");
+            System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+            e1.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton11MouseClicked
+
+    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
+       
+                                         
+        // TODO add your handling code here:
+                // TODO add your handling code here: pobranie wiersza
+        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+
+        int selectedRowIndex = jTable2.getSelectedRow();
+        // set the selected row data into jtextfields
+        
+        jTextField7.setText(model.getValueAt(selectedRowIndex, 0).toString());
+        jTextField8.setText(model.getValueAt(selectedRowIndex, 1).toString());
+        jTextField9.setText(model.getValueAt(selectedRowIndex, 2).toString());
+        
+        
+
+         
+    }//GEN-LAST:event_jTable2MouseClicked
+
+    private void jButton13MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton13MouseClicked
+        // TODO add your handling code here: insert project
+        
+         String nazwa = jTextField11.getText();
+        String stan = jTextField12.getText();
+        String start = jTextField13.getText();
+        String finish = jTextField14.getText();
+        String team_id = jTextField15.getText();
+        String opis = jTextField16.getText();
+       
+
+        try {
+
+            //Creating Connection Object
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/database", "root", "");
+            connection.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+
+            stmt = connection.createStatement();
+            String sql = "INSERT INTO `project`(`name`, `state`, `start`, `finish`, `team_ID`, `description`) VALUES(?,?,?,?,?,?);";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setString(1, nazwa);
+            pst.setString(2, stan);
+            pst.setString(3, start);
+            pst.setString(4, finish);
+            pst.setString(5, team_id);
+            pst.setString(6, opis);
+
+            pst.executeUpdate();
+
+            // stmt.executeUpdate(sql);
+            connection.commit();
+
+            stmt.close();
+            connection.close();
+            JOptionPane.showMessageDialog(null, "Projekt utworzony!");
+        } catch (Exception e1) {
+            JOptionPane.showMessageDialog(null, "Błąd Dodawania!");
+            System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+            e1.printStackTrace();
+        }
+        
+        
+        
+        
+        
+    }//GEN-LAST:event_jButton13MouseClicked
+
+    private void jButton14MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton14MouseClicked
+        // TODO add your handling code here: update projekt
+        
+        String id = jTextField10.getText();
+        String nazwa = jTextField11.getText();
+        String stan = jTextField12.getText();
+        String start = jTextField13.getText();
+        String finish = jTextField14.getText();
+        String team_id = jTextField15.getText();
+        String opis = jTextField16.getText();
+        
+        
+            try {
+
+            //Creating Connection Object
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/database", "root", "");
+            connection.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+
+            stmt = connection.createStatement();
+            String sql = "UPDATE `project` SET `name`= ? ,`state`= ? ,`start`= ? ,`finish`= ? ,`team_ID`= ?, `description`= ? WHERE project_ID = ?";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setString(1, nazwa);
+            pst.setString(2, stan);
+            pst.setString(3, start);
+            pst.setString(4, finish);
+            pst.setString(5, team_id);
+            pst.setString(6, opis);
+            pst.setString(7, id);
+          
+            pst.executeUpdate();
+
+            // stmt.executeUpdate(sql);
+            connection.commit();
+
+            stmt.close();
+            connection.close();
+            JOptionPane.showMessageDialog(null, "Dane poprawione");
+        } catch (Exception e1) {
+            JOptionPane.showMessageDialog(null, "Błąd Edycji!");
+            System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+            e1.printStackTrace();
+        }
+        
+        
+        
+        
+        
+    }//GEN-LAST:event_jButton14MouseClicked
+
+    private void jTable3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable3MouseClicked
+        // TODO add your handling code here:
+        
+                                         
+        // TODO add your handling code here:
+                // TODO add your handling code here: pobranie wiersza
+        DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+
+        int selectedRowIndex = jTable3.getSelectedRow();
+        // set the selected row data into jtextfields
+        
+        jTextField10.setText(model.getValueAt(selectedRowIndex, 0).toString());
+        jTextField11.setText(model.getValueAt(selectedRowIndex, 1).toString());
+        jTextField12.setText(model.getValueAt(selectedRowIndex, 2).toString());
+        jTextField13.setText(model.getValueAt(selectedRowIndex, 3).toString());
+        jTextField14.setText(model.getValueAt(selectedRowIndex, 4).toString());
+        jTextField15.setText(model.getValueAt(selectedRowIndex, 5).toString());
+        jTextField16.setText(model.getValueAt(selectedRowIndex, 6).toString());
+        
+        
+        
+        
+    }//GEN-LAST:event_jTable3MouseClicked
+
+    private void jButton15MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton15MouseClicked
+        // TODO add your handling code here:  delete project
+        
+        String id = jTextField10.getText();
+        
+         try {
+
+            //Creating Connection Object
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/database", "root", "");
+            connection.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+
+            stmt = connection.createStatement();
+            String sql = "DELETE from project where project_ID = ? ";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setString(1, id);
+            pst.executeUpdate();
+
+            // stmt.executeUpdate(sql);
+            connection.commit();
+
+            stmt.close();
+            connection.close();
+            JOptionPane.showMessageDialog(null, "Rekord skasowany!");
+        } catch (Exception e1) {
+            JOptionPane.showMessageDialog(null, "Błąd Edycji!");
+            System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+            e1.printStackTrace();
+        }
+        
+        
+        
+    }//GEN-LAST:event_jButton15MouseClicked
+
+    private void jButton12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton12MouseClicked
+        // TODO add your handling code here: delete team
+        
+        String id = jTextField7.getText();
+        
+         try {
+
+            //Creating Connection Object
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/database", "root", "");
+            connection.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+
+            stmt = connection.createStatement();
+            String sql = "DELETE from team where team_ID = ? ";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setString(1, id);
+            pst.executeUpdate();
+
+            // stmt.executeUpdate(sql);
+            connection.commit();
+
+            stmt.close();
+            connection.close();
+            JOptionPane.showMessageDialog(null, "Rekord skasowany!");
+        } catch (Exception e1) {
+            JOptionPane.showMessageDialog(null, "Błąd Edycji!");
+            System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+            e1.printStackTrace();
+        }
+        
+        
+    }//GEN-LAST:event_jButton12MouseClicked
+
+    private void jButton8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton8MouseClicked
+        // TODO add your handling code here: dodaj pracownika do teamu
+        //INSERT INTO `team_employee`(`employee_ID`, `team_ID`) VALUES ([value-1],[value-2])
+        
+        String employee_id = jTextField6.getText();
+        String team_id = jTextField7.getText();
+     
+
+        try {
+
+            //Creating Connection Object
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/database", "root", "");
+            connection.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+
+            stmt = connection.createStatement();
+            String sql = "INSERT INTO `team_employee`(`employee_ID`, `team_ID`) VALUES (?,?);";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setString(1, employee_id);
+            pst.setString(2, team_id);
+
+            pst.executeUpdate();
+
+            // stmt.executeUpdate(sql);
+            connection.commit();
+
+            stmt.close();
+            connection.close();
+            JOptionPane.showMessageDialog(null, "Pracownik dodany!");
+        } catch (Exception e1) {
+            JOptionPane.showMessageDialog(null, "Błąd Dodawania!");
+            System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+            e1.printStackTrace();
+        }
+        
+    }//GEN-LAST:event_jButton8MouseClicked
+
+    private void jButton9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseClicked
+        // TODO add your handling code here: wyrzuc z projektu
+        
+        String id_employee = jTextField6.getText();
+         String id_team = jTextField7.getText();
+        
+         try {
+
+            //Creating Connection Object
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/database", "root", "");
+            connection.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+
+            stmt = connection.createStatement();
+            String sql = "DELETE from team_employee where team_ID = ? AND employee_ID = ? ";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setString(1, id_team);
+            pst.setString(2, id_employee);
+            pst.executeUpdate();
+
+            // stmt.executeUpdate(sql);
+            connection.commit();
+
+            stmt.close();
+            connection.close();
+            JOptionPane.showMessageDialog(null, "Rekord skasowany!");
+        } catch (Exception e1) {
+            JOptionPane.showMessageDialog(null, "Błąd Edycji!");
+            System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+            e1.printStackTrace();
+        }
+        
+        
+        
+        
+        
+    }//GEN-LAST:event_jButton9MouseClicked
     
     public void clean_table() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
@@ -468,19 +1268,32 @@ public class JFrameApp extends javax.swing.JFrame {
     
         array_project.clear();
     }
+      
+       public void clean_table4() {
+        
+        DefaultTableModel model4 = (DefaultTableModel) jTable4.getModel();
+      
+        model4.setRowCount(0);
+       
+        jTable4.repaint();
+    
+        array_team_employee.clear();
+    }
+      
     public void wyswietlWiersz() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
       
         model.setRowCount(0);
        
-        Object rowData[] = new Object[6];
+        Object rowData[] = new Object[7];
         for (int i = 0; i < baza_prac.size(); i++) {
-
-            rowData[0] = baza_prac.get(i).getLogin();
-            rowData[1] = baza_prac.get(i).getEmail();
-            rowData[2] = baza_prac.get(i).getFirst_Name();
-            rowData[3] = baza_prac.get(i).getLast_Name();
-            rowData[4] = baza_prac.get(i).getPosition();
+            
+            rowData[0] = baza_prac.get(i).getEmployee_ID();
+            rowData[1] = baza_prac.get(i).getLogin();
+            rowData[2] = baza_prac.get(i).getEmail();
+            rowData[3] = baza_prac.get(i).getFirst_Name();
+            rowData[4] = baza_prac.get(i).getLast_Name();
+            rowData[5] = baza_prac.get(i).getPosition();
            
             model.addRow(rowData);
 
@@ -515,7 +1328,7 @@ public class JFrameApp extends javax.swing.JFrame {
          model3.setRowCount(0);
     
             Object rowData3[] = new Object[7];
-        for (int i = 0; i < array_team.size(); i++) {
+        for (int i = 0; i < array_project.size(); i++) {
 
             rowData3[0] = array_project.get(i).getProject_id();
             rowData3[1] = array_project.get(i).getName();
@@ -532,6 +1345,29 @@ public class JFrameApp extends javax.swing.JFrame {
 
     }
 
+                        
+                public void wyswietlWiersz4() {
+        
+        DefaultTableModel model4 = (DefaultTableModel) jTable4.getModel();
+      
+         model4.setRowCount(0);
+    
+            Object rowData4[] = new Object[7];
+        for (int i = 0; i < array_team_employee.size(); i++) {
+// Team_Employee(int employee_ID, String first_Name, String last_Name, int team_id, String name, int leader_id)
+            rowData4[0] = array_team_employee.get(i).getTeam_id();
+            rowData4[1] = array_team_employee.get(i).getFirst_Name();
+            rowData4[2] = array_team_employee.get(i).getLast_Name(); 
+            rowData4[3] = array_team_employee.get(i).getName();
+            rowData4[4] = array_team_employee.get(i).getLeader_id();
+                  
+            
+           
+            model4.addRow(rowData4);
+
+        }
+
+    }
     /**
      * @param args the command line arguments
      */
@@ -569,24 +1405,46 @@ public class JFrameApp extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
+    private javax.swing.JButton jButton13;
+    private javax.swing.JButton jButton14;
+    private javax.swing.JButton jButton15;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
+    private javax.swing.JTable jTable4;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField10;
+    private javax.swing.JTextField jTextField11;
+    private javax.swing.JTextField jTextField12;
+    private javax.swing.JTextField jTextField13;
+    private javax.swing.JTextField jTextField14;
+    private javax.swing.JTextField jTextField15;
+    private javax.swing.JTextField jTextField16;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextField6;
+    private javax.swing.JTextField jTextField7;
+    private javax.swing.JTextField jTextField8;
+    private javax.swing.JTextField jTextField9;
     // End of variables declaration//GEN-END:variables
 }

@@ -18,8 +18,9 @@ import javax.swing.JOptionPane;
  * @author Karol
  */
 public class JFrameLogin extends javax.swing.JFrame {
-
-       private boolean credentials() {
+    int employee_ID;
+    String position;
+    private boolean credentials() {
         //  private String MYSQL_URL = "jdbc:mysql://localhost:3306/test";
         String DRIVER = "com.mysql.jdbc.Driver";
         boolean correct = false;
@@ -28,7 +29,7 @@ public class JFrameLogin extends javax.swing.JFrame {
         
         try {
             Class.forName(DRIVER);
-            String url = "jdbc:mysql://localhost/project";
+            String url = "jdbc:mysql://localhost/database";
             String user = "root";
             String pass = "";
             //Connection conn = DriverManager.getConnection(URL, USER, PASS);
@@ -37,12 +38,17 @@ public class JFrameLogin extends javax.swing.JFrame {
 
             stmt = c.createStatement();
 
-            ResultSet rs = stmt.executeQuery("SELECT * FROM employee WHERE email= " + "'" + jTextField1.getText() + "'" + " AND password= " + "'" + jTextField2.getText() + "'");
+            ResultSet rs = stmt.executeQuery("SELECT employee_ID, email, password, position FROM employee WHERE email= " + "'" + jTextField1.getText() + "'" + " AND password= " + "'" + jTextField2.getText() + "'");
            //ResultSet rs = stmt.executeQuery("SELECT * FROM employee WHERE email= " + "'" + jTextField1.getText() + "'" + " AND password= " + "'" + jPasswordField1.getPassword() + "'");
 
             while (rs.next()) {
                 if (rs.getString("email") != null && rs.getString("password") != null) {
+                   
                     correct = true;
+                     employee_ID = rs.getInt("employee_ID");
+                   System.out.println(employee_ID);
+                   position = rs.getString("position");
+                   System.out.println(position);
                 }
             }
             rs.close();
@@ -55,7 +61,6 @@ public class JFrameLogin extends javax.swing.JFrame {
         return correct;
 
     }
-    
     
 
     
@@ -83,6 +88,7 @@ public class JFrameLogin extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jPasswordField1 = new javax.swing.JPasswordField();
         jTextField2 = new javax.swing.JTextField();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -107,6 +113,13 @@ public class JFrameLogin extends javax.swing.JFrame {
 
         jTextField2.setText("jTextField2");
 
+        jButton3.setText("Admin");
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton3MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -124,14 +137,16 @@ public class JFrameLogin extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addGap(32, 32, 32)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jPasswordField1)
                                 .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jButton1)
-                                    .addGap(43, 43, 43)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+                                    .addGap(37, 37, 37)
                                     .addComponent(jButton2)
-                                    .addGap(16, 16, 16))
-                                .addComponent(jPasswordField1)))))
+                                    .addGap(16, 16, 16)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jButton3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)))))
                 .addContainerGap(100, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -153,7 +168,9 @@ public class JFrameLogin extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addContainerGap(120, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton3)
+                .addContainerGap(77, Short.MAX_VALUE))
         );
 
         pack();
@@ -162,9 +179,39 @@ public class JFrameLogin extends javax.swing.JFrame {
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
                 
-        if (credentials()) {
+        if (credentials() && "admin".equals(position)) {
+            Component frame = null;
+            JOptionPane.showMessageDialog(frame, "Logowanie admina pomyślne");
+            JFrameLogin login = new JFrameLogin();
+            
+            JFrameApp app = new JFrameApp();
+            app.setVisible(true);
+            login.setVisible(false);
+        } 
+        else if(credentials() && !"admin".equals(position))
+        {
             Component frame = null;
             JOptionPane.showMessageDialog(frame, "Logowanie pomyślne");
+            
+            
+        }
+        else {
+            Component frame = null;
+          JOptionPane.showMessageDialog(frame,"Błędne dane.","Login error",JOptionPane.ERROR_MESSAGE);
+        }
+        
+        
+        
+        
+        
+    }//GEN-LAST:event_jButton1MouseClicked
+
+    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
+        // TODO add your handling code here:
+        
+           if (credentials()) {
+            Component frame = null;
+            JOptionPane.showMessageDialog(frame, "Logowanie admina pomyślne");
             JFrameLogin login = new JFrameLogin();
             
             JFrameApp app = new JFrameApp();
@@ -179,7 +226,7 @@ public class JFrameLogin extends javax.swing.JFrame {
         
         
         
-    }//GEN-LAST:event_jButton1MouseClicked
+    }//GEN-LAST:event_jButton3MouseClicked
 
     /**
      * @param args the command line arguments
@@ -219,6 +266,7 @@ public class JFrameLogin extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -16,16 +16,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DB_connect {
-     private static final String Sterownik = "com.mariadb.jdbc.Driver";    
+     private static final String Sterownik = "com.mysql.jdbc.Driver";    
      
      public Connection DB_connection() 
-//Connection connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/DB?user=root&password=myPassword");
-//jdbc:mysql://localhost:3306/db?user=someUser&disableMariaDbDriver
-
         {
         try
         {
-            String url = "jdbc:mariadb://localhost:3306/database?user=root&password=";
+            String url = "jdbc:mysql://localhost/database";
             String user = "root";
             String password = "";
 
