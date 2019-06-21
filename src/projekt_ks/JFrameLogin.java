@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
  * @author Karol
  */
 public class JFrameLogin extends javax.swing.JFrame {
-    int employee_ID;
+    int nr_pracownika;
     String position;
     private boolean credentials() {
         //  private String MYSQL_URL = "jdbc:mysql://localhost:3306/test";
@@ -45,8 +45,8 @@ public class JFrameLogin extends javax.swing.JFrame {
                 if (rs.getString("email") != null && rs.getString("password") != null) {
                    
                     correct = true;
-                     employee_ID = rs.getInt("employee_ID");
-                   System.out.println(employee_ID);
+                     nr_pracownika = rs.getInt("employee_ID");
+                   System.out.println(nr_pracownika);
                    position = rs.getString("position");
                    System.out.println(position);
                 }
@@ -86,9 +86,7 @@ public class JFrameLogin extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
         jTextField2 = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -109,16 +107,7 @@ public class JFrameLogin extends javax.swing.JFrame {
 
         jLabel3.setText("Project Manager- Zaloguj się!");
 
-        jPasswordField1.setText("jPasswordField1");
-
-        jTextField2.setText("jTextField2");
-
-        jButton3.setText("Admin");
-        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton3MouseClicked(evt);
-            }
-        });
+        jTextField2.setForeground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -136,17 +125,13 @@ public class JFrameLogin extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addGap(32, 32, 32)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jPasswordField1)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
-                                    .addGap(37, 37, 37)
-                                    .addComponent(jButton2)
-                                    .addGap(16, 16, 16)))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jButton3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(37, 37, 37)
+                                .addComponent(jButton2)
+                                .addGap(16, 16, 16))
+                            .addComponent(jTextField2))))
                 .addContainerGap(100, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -161,16 +146,12 @@ public class JFrameLogin extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addGap(18, 18, 18)
-                .addComponent(jButton3)
-                .addContainerGap(77, Short.MAX_VALUE))
+                .addContainerGap(120, Short.MAX_VALUE))
         );
 
         pack();
@@ -192,7 +173,11 @@ public class JFrameLogin extends javax.swing.JFrame {
         {
             Component frame = null;
             JOptionPane.showMessageDialog(frame, "Logowanie pomyślne");
+            JFrameLogin login = new JFrameLogin();
             
+            JFrameAppUser app_user = new JFrameAppUser(nr_pracownika);
+            app_user.setVisible(true);
+            login.setVisible(false);
             
         }
         else {
@@ -205,28 +190,6 @@ public class JFrameLogin extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_jButton1MouseClicked
-
-    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
-        // TODO add your handling code here:
-        
-           if (credentials()) {
-            Component frame = null;
-            JOptionPane.showMessageDialog(frame, "Logowanie admina pomyślne");
-            JFrameLogin login = new JFrameLogin();
-            
-            JFrameApp app = new JFrameApp();
-            app.setVisible(true);
-            login.setVisible(false);
-        } else {
-            Component frame = null;
-          JOptionPane.showMessageDialog(frame,"Błędne dane.","Login error",JOptionPane.ERROR_MESSAGE);
-        }
-        
-        
-        
-        
-        
-    }//GEN-LAST:event_jButton3MouseClicked
 
     /**
      * @param args the command line arguments
@@ -266,11 +229,9 @@ public class JFrameLogin extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
