@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 21 Cze 2019, 00:31
+-- Czas generowania: 21 Cze 2019, 17:51
 -- Wersja serwera: 10.1.36-MariaDB
 -- Wersja PHP: 5.6.38
 
@@ -98,15 +98,16 @@ CREATE TABLE `employee` (
 --
 
 INSERT INTO `employee` (`employee_ID`, `first_Name`, `last_Name`, `login`, `email`, `password`, `position`) VALUES
-(1, 'Karol', 'Sikora', 'kkaarrol', 'asdf@gmail.com', 'dupa123', 'CEO'),
-(2, 'David', 'Nienajadło', 'david123', 'asew@gmail.com', 'dupa123', 'VP'),
-(3, 'Adam', 'Krówka', 'adam12', 'adam@gmail.com', 'dupa123', 'VP'),
-(4, 'Szwagier', 'Kolaska', 'qwed', 'zxc@wp.pl', 'dupa123', 'MIS'),
+(1, 'Kejrol', 'Sikora', 'kkaarrol', 'asdf@gmail.com', 'zxcv1234', 'CEO'),
+(2, 'David', 'Nienajadło', 'david123', 'asew@gmail.com', 'zxcv1234', 'VP'),
+(3, 'Adam', 'Krówka', 'adam12', 'adam@gmail.com', 'zxcv1234', 'VP'),
+(4, 'Szwagier', 'Kolaska', 'qwed', 'zxc@wp.pl', 'zxcv1234', 'MIS'),
 (7, 'Aqws', 'Zxcc', 'testowy1', 'kkaarrol@gmail.com', '$2y$10$28EuDluzT9qsww4oAvnyjuX0eyX6wz51Cenp5oGGjtd8Yh3AKzqUG', 'intern'),
 (8, 'FBFB', 'DFs', 'testowy2', 'test@op.pl', '$2y$10$L/gS1I6HEt58pxzD8bZqO.sZnnEcUwnpAD2jcoIZDQ.DbTgxvOHrK', ''),
 (9, 'SSDdV', 'Fvbn', 'boss123', 'tescik@wp.pl', '$2y$10$rKINaNxDOq0tYuJtav0MwuR0Hy8VJ9ZVk3sj7ylf.6uAzNrg27uSi', ''),
 (10, 'sad', 'sadad', 'asda', 'asdsd', 'asd123', 'mis'),
-(11, 'John', 'Wick', 'admin', 'admin@gmail.com', 'asdf1234', 'admin');
+(11, 'John', 'Wick', 'admin', 'admin@gmail.com', 'asdf1234', 'admin'),
+(12, 'ASaa', 'Olpo', 'sdfs', 'sda@wp.pl', 'password', 'mis');
 
 -- --------------------------------------------------------
 
@@ -216,7 +217,7 @@ ALTER TABLE `team_employee`
 -- AUTO_INCREMENT dla tabeli `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `employee_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `employee_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT dla tabeli `project`
