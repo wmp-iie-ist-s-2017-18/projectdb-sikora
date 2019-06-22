@@ -168,11 +168,13 @@ public class JFrameLogin extends javax.swing.JFrame {
         if (credentials() && "admin".equals(position)) {
             Component frame = null;
             JOptionPane.showMessageDialog(frame, "Logowanie admina pomyślne");
+            jTextField2.setText("");
             JFrameLogin login = new JFrameLogin();
             
             JFrameApp app = new JFrameApp();
             app.setVisible(true);
             login.setVisible(false);
+           
         } 
         else if(credentials() && !"admin".equals(position))
         {

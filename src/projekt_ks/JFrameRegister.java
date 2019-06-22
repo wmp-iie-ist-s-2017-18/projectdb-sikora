@@ -49,8 +49,6 @@ public class JFrameRegister extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
         jTextField1.setText("login");
 
         jTextField2.setText("mail@op.com");
@@ -60,7 +58,6 @@ public class JFrameRegister extends javax.swing.JFrame {
         jTextField4.setText("Surname");
 
         jTextField5.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField5.setText("password");
 
         jTextField6.setText("position");
 
@@ -181,6 +178,7 @@ public class JFrameRegister extends javax.swing.JFrame {
             stmt.close();
             connection.close();
             JOptionPane.showMessageDialog(null, "Pracownik dodany!");
+            
         } catch (Exception e1) {
             JOptionPane.showMessageDialog(null, "Błąd Dodawania!");
             System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
